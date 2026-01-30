@@ -3,10 +3,10 @@ import { ToastContainer } from 'react-toastify';
 import MedicineForm from './components/MedicineForm';
 import StockList from './components/StockList';
 import MedicineService from './services/MedicineService';
-import 'react-toastify/dist/ReactToastify.css';
+     import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const [medicines, setMedicines] = useState([]);
+      const [medicines, setMedicines] = useState([]);
   const [editingMedicine, setEditingMedicine] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -21,7 +21,7 @@ function App() {
       const response = await MedicineService.getAllMedicines();
       setMedicines(response.data || []);
     } catch (err) {
-      console.error('Failed to fetch medicines', err);
+           console.error('Failed to fetch medicines', err);
     } finally {
       setLoading(false);
     }
