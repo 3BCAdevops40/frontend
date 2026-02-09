@@ -1,16 +1,59 @@
-# React + Vite
+# Medical Stock Management System – Frontend
+# Project Summary
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The Medical Stock Management System (Frontend) is a web-based user interface developed to manage medicine inventory efficiently. This frontend application allows users to interact with the system to perform CRUD (Create, Read, Update, Delete) operations on medical stock data in a simple and user-friendly way.
 
-Currently, two official plugins are available:
+The application provides forms to add new medicines, displays available stock in a structured table, allows updating medicine details such as quantity and price, and supports deleting expired or unnecessary records. It communicates with the backend REST APIs to fetch and update data in real time.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This frontend is designed to reduce manual work, improve accuracy, and make medicine stock handling easier for hospitals and medical stores.
 
-## React Compiler
+# Frontend Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Add new medicine details
 
-## Expanding the ESLint configuration
+View complete medicine stock list
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Update medicine quantity, price, and expiry date
+
+Delete expired or incorrect medicine records
+
+Simple and responsive user interface
+
+Real-time data interaction with backend APIs
+
+# Technologies Used (Frontend)
+
+React.js
+
+HTML5
+
+CSS3
+
+JavaScript
+
+Axios (for API communication)
+
+ # CRUD Operation Flow (Frontend)
+
+Create: Form to add new medicine
+
+Read: Display medicine list in table format
+
+Update: Edit existing medicine details
+
+Delete: Remove expired or unwanted medicines
+
+# Future Enhancements
+
+The system can be enhanced in the future with the following features:
+
+User authentication and role-based access (Admin / Staff)
+
+Automatic alerts for low stock and expired medicines
+
+Search and filter options by medicine name or expiry date
+
+Report generation (daily/monthly stock reports)
+<img width="1366" height="768" alt="Screenshot 2026-02-09 132944" src="https://github.com/user-attachments/assets/15691477-990b-47bf-abe6-4f63849b327c" />
+<img width="1366" height="768" alt="Screenshot 2026-02-09 192359" src="https://github.com/user-attachments/assets/bc28172a-21d4-4ea7-bf1e-f1d13bc207e7" />
+<img width="1366" height="768" alt="Screenshot 2026-02-09 191531" src="https://github.com/user-attachments/assets/cfd4c77b-ef94-4162-862d-c2e5b48bdf26" />
