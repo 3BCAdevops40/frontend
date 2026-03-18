@@ -14,9 +14,13 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
+      id-token: write
       contents: read
     env:
       AZURE_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE || secrets.AZUREAPPSERVICE_PUBLISHPROFILE || secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5B03EFCDA06B4CD2803FC8F20F6BBD36 }}
+      AZURE_CLIENT_ID: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5B03EFCDA06B4CD2803FC8F20F6BBD36 }}
+      AZURE_TENANT_ID: ${{ secrets.AZUREAPPSERVICE_TENANTID_117E05FADB494310B5EE168960AF2EFA }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_92F7D5F1A7464F9DAD3E38039CEA7E00 }}
 
     steps:
       - name: Checkout
@@ -37,17 +41,36 @@ jobs:
       - name: Verify build output
         run: ls -la dist
 
-      - name: Validate Azure publish profile secret
+      - name: Print deploy auth mode
         run: |
-          if [ -z "$AZURE_PUBLISH_PROFILE" ]; then
-            echo "Missing publish profile secret. Set AZURE_WEBAPP_PUBLISH_PROFILE (or AZUREAPPSERVICE_PUBLISHPROFILE) in frontend repo secrets."
-            exit 1
+          if [ -n "$AZURE_PUBLISH_PROFILE" ]; then
+            echo "Using publish profile authentication"
+          else
+            echo "Publish profile not found, falling back to Azure login authentication"
           fi
 
-      - name: Deploy to Azure Web App
+      - name: Deploy with publish profile
+        if: env.AZURE_PUBLISH_PROFILE != ''
         uses: azure/webapps-deploy@v3
         with:
           app-name: medicalfrontend
           slot-name: Production
           publish-profile: ${{ env.AZURE_PUBLISH_PROFILE }}
+          package: ./dist
+
+      - name: Azure login fallback
+        if: env.AZURE_PUBLISH_PROFILE == ''
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
+
+      - name: Deploy with Azure login fallback
+        if: env.AZURE_PUBLISH_PROFILE == ''
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: medicalfrontend
+          slot-name: Production
           package: ./dist
