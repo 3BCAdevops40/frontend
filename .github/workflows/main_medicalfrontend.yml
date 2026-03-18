@@ -41,6 +41,14 @@ jobs:
       - name: Verify build output
         run: ls -la dist
 
+      - name: Create deployment package
+        run: |
+          cd dist
+          zip -r ../frontend-dist.zip .
+
+      - name: Verify deployment package
+        run: ls -la frontend-dist.zip
+
       - name: Print deploy auth mode
         run: |
           if [ -n "$AZURE_PUBLISH_PROFILE" ]; then
@@ -56,7 +64,7 @@ jobs:
           app-name: medicalfrontend
           slot-name: Production
           publish-profile: ${{ env.AZURE_PUBLISH_PROFILE }}
-          package: ./dist
+          package: ./frontend-dist.zip
 
       - name: Azure login fallback
         if: env.AZURE_PUBLISH_PROFILE == ''
@@ -73,4 +81,4 @@ jobs:
         with:
           app-name: medicalfrontend
           slot-name: Production
-          package: ./dist
+          package: ./frontend-dist.zip
