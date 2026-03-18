@@ -65,6 +65,7 @@ jobs:
           slot-name: Production
           publish-profile: ${{ env.AZURE_PUBLISH_PROFILE }}
           package: ./frontend-dist.zip
+          startup-command: "pm2 serve /home/site/wwwroot --no-daemon --spa"
 
       - name: Azure login fallback
         if: env.AZURE_PUBLISH_PROFILE == ''
@@ -82,3 +83,4 @@ jobs:
           app-name: medicalfrontend
           slot-name: Production
           package: ./frontend-dist.zip
+          startup-command: "pm2 serve /home/site/wwwroot --no-daemon --spa"
