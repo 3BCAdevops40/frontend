@@ -27,4 +27,20 @@
   .hover-grow:hover {
     transform: scale(1.1);
   }
+
+  .expiry-status {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold;
+  }
+
+  .expiry-status--safe {
+    @apply bg-green-100 text-green-700;
+  }
+
+  .expiry-status--warning {
+    @apply bg-orange-100 text-orange-700;
+  }
+
+  .expiry-status--expired {
+    @apply bg-red-100 text-red-700;
+  }
 }

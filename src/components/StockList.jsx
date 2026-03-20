@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Pencil, Trash, Search, AlertCircle } from 'lucide-react';
 import { toast } from 'react-toastify';
 import MedicineService from '../services/MedicineService';
+import { getExpiryStatus } from '../utils/expiryStatus';
 
 const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,6 +46,7 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
         <td className="px-4 py-4"><div className="h-4 bg-slate-200 rounded w-24"></div></td>
         <td className="px-4 py-4"><div className="h-4 bg-slate-200 rounded w-24"></div></td>
         <td className="px-4 py-4"><div className="h-4 bg-slate-200 rounded w-16"></div></td>
+        <td className="px-4 py-4"><div className="h-4 bg-slate-200 rounded w-24"></div></td>
         <td className="px-4 py-4"><div className="h-4 bg-slate-200 rounded w-20"></div></td>
       </tr>
     ));
@@ -86,6 +88,7 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
               <th className="px-4 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Arrival</th>
               <th className="px-4 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Expiry</th>
               <th className="px-4 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Quantity</th>
+              <th className="px-4 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Expiry Status</th>
               <th className="px-4 py-4 text-right text-xs font-bold text-slate-700 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -94,7 +97,7 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
             
             {!loading && filteredMedicines.length === 0 && medicines.length > 0 && (
               <tr>
-                <td colSpan="6" className="px-4 py-8 text-center text-slate-500 italic">
+                <td colSpan="7" className="px-4 py-8 text-center text-slate-500 italic">
                   No matches for "{searchTerm}"
                 </td>
               </tr>
@@ -102,14 +105,16 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
             
             {!loading && filteredMedicines.length === 0 && medicines.length === 0 && (
               <tr>
-                <td colSpan="6" className="px-4 py-8 text-center text-slate-500 italic">
+                <td colSpan="7" className="px-4 py-8 text-center text-slate-500 italic">
                   No medicines yet. Add one from the form.
                 </td>
               </tr>
             )}
             
             {!loading && filteredMedicines.length > 0 &&
-              filteredMedicines.map((medicine) => (
+              filteredMedicines.map((medicine) => {
+                const expiryStatus = getExpiryStatus(medicine.expiryDate);
+                return (
                 <tr 
                   key={medicine.id} 
                   className="hover:bg-indigo-50 transition-colors"
@@ -141,6 +146,11 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
                       {isLowStock(medicine.quantity) && ' ⚠️'}
                     </span>
                   </td>
+                  <td className="px-4 py-4">
+                    <span className={`expiry-status ${expiryStatus.className}`}>
+                      {expiryStatus.label}
+                    </span>
+                  </td>
                   <td className="px-4 py-4 text-right">
                     <div className="flex justify-end gap-2">
                       <button
@@ -160,7 +170,8 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
                     </div>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
           </tbody>
         </table>
       </div>
