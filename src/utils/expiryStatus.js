@@ -1,14 +1,36 @@
+const DAY_MS = 1000 * 60 * 60 * 24;
+
+export const parseLocalDate = (value) => {
+  if (!value) return null;
+
+  // Handle backend values like "yyyy-MM-dd" and ISO date-time safely in local time.
+  const text = String(value).slice(0, 10);
+  const parts = text.split('-').map(Number);
+  if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
+
+  const [year, month, day] = parts;
+  const parsed = new Date(year, month - 1, day);
+
+  if (
+    parsed.getFullYear() !== year ||
+    parsed.getMonth() !== month - 1 ||
+    parsed.getDate() !== day
+  ) {
+    return null;
+  }
+
+  parsed.setHours(0, 0, 0, 0);
+  return parsed;
+};
+
 export const getDaysUntilExpiry = (expiryDate) => {
-  if (!expiryDate) return null;
+  const expiry = parseLocalDate(expiryDate);
+  if (!expiry) return null;
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const expiry = new Date(expiryDate);
-  if (Number.isNaN(expiry.getTime())) return null;
-  expiry.setHours(0, 0, 0, 0);
-
-  return Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+  return Math.ceil((expiry.getTime() - today.getTime()) / DAY_MS);
 };
 
 export const getExpiryStatus = (expiryDate) => {
