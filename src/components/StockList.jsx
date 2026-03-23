@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Pencil, Trash, Search, AlertCircle } from 'lucide-react';
 import { toast } from 'react-toastify';
 import MedicineService from '../services/MedicineService';
-import { getExpiryStatus, parseLocalDate } from '../utils/expiryStatus';
+import { getDaysUntilExpiry, getExpiryStatus } from '../utils/expiryStatus';
 
 const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,13 +28,8 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
   };
 
   const isNearExpiry = (expiryDate) => {
-    if (!expiryDate) return false;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const expiry = parseLocalDate(expiryDate);
-    if (!expiry) return false;
-    const diffDays = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    return diffDays <= 30 && diffDays >= 0;
+    const diffDays = getDaysUntilExpiry(expiryDate);
+    return diffDays !== null && diffDays <= 30 && diffDays >= 0;
   };
 
   const isLowStock = (quantity) => Number(quantity) < 10;

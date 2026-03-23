@@ -1,10 +1,37 @@
 const DAY_MS = 1000 * 60 * 60 * 24;
 
+export const convertDdMmYyyyToYyyyMmDd = (value) => {
+  if (!value) return null;
+
+  const text = String(value).trim();
+  const parts = text.split('-');
+
+  if (parts.length !== 3) return null;
+
+  // Already yyyy-mm-dd
+  if (parts[0].length === 4) {
+    const [year, month, day] = parts;
+    return `${year}-${month}-${day}`;
+  }
+
+  // Convert dd-mm-yyyy -> yyyy-mm-dd
+  if (parts[0].length === 2 && parts[2].length === 4) {
+    const [day, month, year] = parts;
+    return `${year}-${month}-${day}`;
+  }
+
+  return null;
+};
+
 export const parseLocalDate = (value) => {
   if (!value) return null;
 
-  // Handle backend values like "yyyy-MM-dd" and ISO date-time safely in local time.
-  const text = String(value).slice(0, 10);
+  // Convert supported date formats to yyyy-mm-dd first.
+  const normalized = convertDdMmYyyyToYyyyMmDd(String(value).slice(0, 10));
+  if (!normalized) return null;
+
+  // Parse yyyy-mm-dd safely in local time.
+  const text = normalized;
   const parts = text.split('-').map(Number);
   if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
 
