@@ -27,8 +27,8 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
     }
   };
 
-  const isNearExpiry = (expiryDate) => {
-    const diffDays = getDaysUntilExpiry(expiryDate);
+  const isNearExpiry = (expiryDate, baseDate) => {
+    const diffDays = getDaysUntilExpiry(expiryDate, baseDate);
     return diffDays !== null && diffDays <= 30 && diffDays >= 0;
   };
 
@@ -110,7 +110,8 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
             
             {!loading && filteredMedicines.length > 0 &&
               filteredMedicines.map((medicine) => {
-                const expiryStatus = getExpiryStatus(medicine.expiryDate);
+                const referenceDate = medicine.arrivalDate || null;
+                const expiryStatus = getExpiryStatus(medicine.expiryDate, referenceDate);
                 return (
                 <tr 
                   key={medicine.id} 
@@ -124,7 +125,7 @@ const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-slate-600">{medicine.expiryDate || '—'}</span>
-                      {isNearExpiry(medicine.expiryDate) && (
+                      {isNearExpiry(medicine.expiryDate, referenceDate) && (
                         <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-xs font-bold animate-pulse">
                           <AlertCircle size={12} /> Near Expiry
                         </span>

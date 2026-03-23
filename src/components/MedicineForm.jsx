@@ -47,6 +47,10 @@ const MedicineForm = ({ editingMedicine, onSuccess, onCancel }) => {
       setError('Quantity cannot be negative.');
       return;
     }
+    if (formData.expiryDate < formData.arrivalDate) {
+      setError('Expiry date must be after arrival date.');
+      return;
+    }
 
     try {
       setLoading(true);

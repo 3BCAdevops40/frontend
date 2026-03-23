@@ -4,7 +4,8 @@ export const convertDdMmYyyyToYyyyMmDd = (value) => {
   if (!value) return null;
 
   const text = String(value).trim();
-  const parts = text.split('-');
+  const normalizedText = text.replace(/\//g, '-');
+  const parts = normalizedText.split('-');
 
   if (parts.length !== 3) return null;
 
@@ -50,18 +51,42 @@ export const parseLocalDate = (value) => {
   return parsed;
 };
 
-export const getDaysUntilExpiry = (expiryDate) => {
+const getUtcDayNumber = (date) => {
+  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / DAY_MS;
+};
+
+const parseBaseDate = (value) => {
+  if (!value) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  }
+
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return null;
+    const normalized = new Date(value);
+    normalized.setHours(0, 0, 0, 0);
+    return normalized;
+  }
+
+  return parseLocalDate(value);
+};
+
+export const getDaysUntilExpiry = (expiryDate, baseDate = null) => {
   const expiry = parseLocalDate(expiryDate);
   if (!expiry) return null;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const startDate = parseBaseDate(baseDate);
+  if (!startDate) return null;
 
-  return Math.ceil((expiry.getTime() - today.getTime()) / DAY_MS);
+  const expiryUtcDay = getUtcDayNumber(expiry);
+  const startUtcDay = getUtcDayNumber(startDate);
+
+  return expiryUtcDay - startUtcDay;
 };
 
-export const getExpiryStatus = (expiryDate) => {
-  const daysLeft = getDaysUntilExpiry(expiryDate);
+export const getExpiryStatus = (expiryDate, baseDate = null) => {
+  const daysLeft = getDaysUntilExpiry(expiryDate, baseDate);
 
   if (daysLeft === null) {
     return { label: '—', className: 'expiry-status--safe' };
