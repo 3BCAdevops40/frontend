@@ -7,6 +7,8 @@ import { getDaysUntilExpiry, getExpiryStatus } from '../utils/expiryStatus';
 const StockList = ({ medicines, loading, onEdit, onRefresh }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
+
+  
   const filteredMedicines = useMemo(() => {
     if (!searchTerm) return medicines;
     return medicines.filter((med) =>
